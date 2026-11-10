@@ -1,4 +1,4 @@
-import datetime  
+import datetime
 
 print("Hello world!")
 '''
@@ -13,9 +13,18 @@ Output: Total days late, fine amount due, and receipt summary.
 '''
 
 
+def parse_date(value):
+    if isinstance(value, datetime.date):
+        return value
+    if isinstance(value, str):
+        return datetime.datetime.strptime(value, "%d/%m/%y").date()
+    raise TypeError("Date must be a string in DD/MM/YY format or a date object.")
+
+
 def calculateDaysLate(DUE_DATE, CURRENT_DATE):
-    due_date = datetime.datetime.strptime(DUE_DATE, "%d/%m/%y").date()
-    days_late = (CURRENT_DATE - due_date).days
+    due_date = parse_date(DUE_DATE)
+    current_date = parse_date(CURRENT_DATE)
+    days_late = (current_date - due_date).days
     if days_late < 0:
         days_late = 0
     return days_late
@@ -28,6 +37,8 @@ def calculateFine(BOOK_TYPE, MEMBERSHIP, DAYS_LATE):
         daily_fine = 1.00
     elif BOOK_TYPE == "dvd":
         daily_fine = 2.00
+    else:
+        raise ValueError("Invalid book type!")
 
     fine = DAYS_LATE * daily_fine
 
@@ -35,33 +46,36 @@ def calculateFine(BOOK_TYPE, MEMBERSHIP, DAYS_LATE):
         fine = fine * 0.50
     elif MEMBERSHIP == "student":
         fine = fine * 0.80
+    elif MEMBERSHIP != "adult":
+        raise ValueError("Invalid membership type!")
 
     if fine > 15:
         fine = 15
     return fine
 
-BOOK_TYPE = input("What book type do you have (Standard, Best-Seller, DVD): ").lower()
-DUE_DATE = input("When was the book due to be returned? (DD/MM/YY): ")
-MEMBERSHIP = input("What member type are you? (Adult, Student, Senior): ").lower()
-CURRENT_DATE = datetime.date.today()
 
-if BOOK_TYPE not in ["standard", "best-seller", "dvd"]:
-    print("Invalid book type!")
-elif MEMBERSHIP not in ["adult", "student", "senior"]:
-    print("Invalid membership type!")
+if __name__ == "__main__":
+    BOOK_TYPE = input("What book type do you have (Standard, Best-Seller, DVD): ").lower()
+    DUE_DATE = input("When was the book due to be returned? (DD/MM/YY): ")
+    MEMBERSHIP = input("What member type are you? (Adult, Student, Senior): ").lower()
+    CURRENT_DATE = datetime.date.today()
 
-else:
-    DAYS_LATE = calculateDaysLate(DUE_DATE, CURRENT_DATE)
-    FINE = calculateFine(BOOK_TYPE, MEMBERSHIP, DAYS_LATE)
-    print("\n========== LIBRARY RECEIPT ==========")
-    print("Book type:       ", BOOK_TYPE.upper())
-    print("Membership:      ", MEMBERSHIP.capitalize())
-    print("Due date:        ", DUE_DATE)
-    print("Return date:     ", CURRENT_DATE.strftime("%d/%m/%y"))
-    print("Days late:       ", DAYS_LATE)
-    print("Fine due:        £{:.2f}".format(FINE))
-    print("=====================================")
-    if DAYS_LATE == 0:
-        print("Thank you! Your book was returned on time.")
+    if BOOK_TYPE not in ["standard", "best-seller", "dvd"]:
+        print("Invalid book type!")
+    elif MEMBERSHIP not in ["adult", "student", "senior"]:
+        print("Invalid membership type!")
     else:
-        print("Please pay your outstanding fine.")
+        DAYS_LATE = calculateDaysLate(DUE_DATE, CURRENT_DATE)
+        FINE = calculateFine(BOOK_TYPE, MEMBERSHIP, DAYS_LATE)
+        print("\n========== LIBRARY RECEIPT ==========")
+        print("Book type:       ", BOOK_TYPE.upper())
+        print("Membership:      ", MEMBERSHIP.capitalize())
+        print("Due date:        ", DUE_DATE)
+        print("Return date:     ", CURRENT_DATE.strftime("%d/%m/%y"))
+        print("Days late:       ", DAYS_LATE)
+        print("Fine due:        £{:.2f}".format(FINE))
+        print("=====================================")
+        if DAYS_LATE == 0:
+            print("Thank you! Your book was returned on time.")
+        else:
+            print("Please pay your outstanding fine.")
