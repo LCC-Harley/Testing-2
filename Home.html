@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaNest Library | Discover Your Next Great Read</title>
+    <meta
+      name="description"
+      content="Explore a modern library experience with new releases, community events, and easy book returns."
+    />
+    <style>
+      :root {
+        --bg: #07111d;
+        --bg-soft: #0d1c2c;
+        --panel: rgba(14, 27, 40, 0.8);
+        --panel-strong: #10263a;
+        --primary: #7c9cff;
+        --primary-2: #66e4d7;
+        --accent: #ffb86c;
+        --text: #edf6ff;
+        --muted: #b6c8d8;
+        --line: rgba(255, 255, 255, 0.08);
+        --shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background:
+          radial-gradient(circle at 15% 20%, rgba(124, 156, 255, 0.18), transparent 25%),
+          radial-gradient(circle at 85% 15%, rgba(102, 228, 215, 0.14), transparent 20%),
+          linear-gradient(180deg, #040b12 0%, var(--bg) 35%, #091823 100%);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 99;
+        backdrop-filter: blur(18px);
+        background: rgba(7, 17, 29, 0.7);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 78px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: #06121d;
+        font-weight: 900;
+        box-shadow: 0 12px 28px rgba(124, 156, 255, 0.5);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        color: var(--muted);
+        font-size: 0.96rem;
+      }
+
+      .nav-links a:hover { color: var(--text); }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: 0.9rem 1.4rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: #07111d;
+        box-shadow: 0 20px 40px rgba(102, 228, 215, 0.25);
+      }
+
+      .btn-primary:hover { transform: translateY(-2px); }
+
+      .btn-ghost {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--text);
+      }
+
+      .hero {
+        padding: 72px 0 36px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: center;
+        gap: 48px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.55rem 0.9rem;
+        border: 1px solid rgba(124, 156, 255, 0.3);
+        border-radius: 999px;
+        color: #dfeaff;
+        background: rgba(124, 156, 255, 0.07);
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary-2);
+        box-shadow: 0 0 16px rgba(102, 228, 215, 0.8);
+      }
+
+      h1 {
+        margin: 20px 0 18px;
+        font-size: clamp(3rem, 5vw, 5rem);
+        line-height: 0.98;
+        letter-spacing: -0.05em;
+      }
+
+      .gradient-text {
+        background: linear-gradient(120deg, #dfe8ff, #77d9ff 35%, #6ee7d5 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .lead {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.08rem;
+        max-width: 620px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 32px;
+      }
+
+      .trust-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-top: 36px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .trust-item strong {
+        color: var(--text);
+        display: block;
+        font-size: 1.4rem;
+        margin-bottom: 4px;
+      }
+
+      .visual-wrap {
+        position: relative;
+      }
+
+      .hero-card {
+        position: relative;
+        background: linear-gradient(180deg, rgba(17, 31, 46, 0.96), rgba(8, 17, 26, 0.96));
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .hero-card img {
+        width: 100%;
+        height: 620px;
+        object-fit: cover;
+        filter: saturate(1.1) contrast(1.05);
+      }
+
+      .floating-panel {
+        position: absolute;
+        right: -18px;
+        bottom: 28px;
+        width: min(280px, 70%);
+        padding: 18px 18px 16px;
+        background: rgba(5, 15, 24, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(16px);
+        border-radius: 22px;
+        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.38);
+      }
+
+      .mini-stat {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 12px;
+      }
+
+      .mini-stat .chip {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(124, 156, 255, 0.2), rgba(102, 228, 215, 0.15));
+        color: var(--text);
+        font-size: 1.3rem;
+      }
+
+      .mini-stat strong {
+        display: block;
+        font-size: 1.25rem;
+      }
+
+      .mini-stat span {
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .section {
+        padding: 80px 0;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(2rem, 3vw, 3rem);
+        letter-spacing: -0.05em;
+      }
+
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
+        max-width: 540px;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .feature-card {
+        background: rgba(17, 28, 39, 0.86);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 28px 22px;
+        box-shadow: 0 18px 35px rgba(5, 10, 15, 0.18);
+      }
+
+      .feature-icon {
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 16px;
+        margin-bottom: 18px;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, rgba(124, 156, 255, 0.18), rgba(102, 228, 215, 0.18));
+        border: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .feature-card h3 {
+        margin: 0 0 12px;
+        font-size: 1.35rem;
+      }
+
+      .feature-card p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .showcase {
+        display: grid;
+        grid-template-columns: 1.02fr 0.98fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .showcase-panel {
+        background: linear-gradient(180deg, rgba(13, 24, 36, 0.9), rgba(11, 19, 29, 0.9));
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .showcase-panel img {
+        width: 100%;
+        height: 520px;
+        object-fit: cover;
+      }
+
+      .showcase-content {
+        padding: 34px;
+      }
+
+      .showcase-list {
+        list-style: none;
+        padding: 0;
+        margin: 24px 0 0;
+        display: grid;
+        gap: 18px;
+      }
+
+      .showcase-list li {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        color: var(--muted);
+      }
+
+      .showcase-list li::before {
+        content: "✓";
+        display: inline-grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: rgba(102, 228, 215, 0.14);
+        color: var(--primary-2);
+        font-weight: 900;
+        flex-shrink: 0;
+      }
+
+      .stats-band {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+        margin-top: 28px;
+      }
+
+      .stat-box {
+        background: rgba(14, 24, 35, 0.84);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 22px 18px;
+        text-align: center;
+      }
+
+      .stat-box strong {
+        display: block;
+        font-size: clamp(2rem, 3vw, 2.7rem);
+        letter-spacing: -0.06em;
+      }
+
+      .stat-box span {
+        color: var(--muted);
+      }
+
+      .testimonial-wrap {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .quote-card {
+        background: rgba(18, 29, 39, 0.86);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 24px 22px;
+      }
+
+      .stars {
+        color: #ffcb5c;
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+      }
+
+      .quote-card p {
+        margin: 0 0 18px;
+        color: var(--muted);
+      }
+
+      .person {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .person strong {
+        display: block;
+        font-size: 0.95rem;
+      }
+
+      .person span {
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .cta {
+        background: linear-gradient(135deg, rgba(124, 156, 255, 0.12), rgba(102, 228, 215, 0.12));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 32px;
+        padding: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .cta h3 {
+        margin: 0 0 8px;
+        font-size: clamp(1.8rem, 3vw, 3rem);
+        letter-spacing: -0.04em;
+      }
+
+      .cta p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      footer {
+        padding: 40px 0 80px;
+        color: var(--muted);
+      }
+
+      .footer-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        border-top: 1px solid var(--line);
+        padding-top: 28px;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 960px) {
+        .hero-grid,
+        .showcase,
+        .feature-grid,
+        .testimonial-wrap,
+        .stats-band {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-card img {
+          height: 480px;
+        }
+
+        .section-head,
+        .cta,
+        .footer-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          display: none;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .nav {
+          min-height: 72px;
+        }
+
+        .nav-actions {
+          gap: 8px;
+        }
+
+        .btn {
+          padding: 0.8rem 1rem;
+          font-size: 0.9rem;
+        }
+
+        h1 {
+          font-size: 2.7rem;
+        }
+
+        .hero-card img {
+          height: 400px;
+        }
+
+        .floating-panel {
+          right: 16px;
+          left: 16px;
+          width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <a href="libary.html" class="brand" aria-label="NovaNest Library home">
+          <span class="brand-mark">N</span>
+          <span>NovaNest</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#features">Collections</a>
+          <a href="#showcase">Events</a>
+          <a href="#testimonials">Reviews</a>
+          <a href="libary.html">Return book</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a href="libary.html" class="btn btn-ghost">My account</a>
+          <a href="libary.html" class="btn btn-primary">Return your book</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="eyebrow">Books, community, and discovery</div>
+            <h1>
+              Find your next<br />
+              <span class="gradient-text">great read</span>.
+            </h1>
+            <p class="lead">
+              Discover a library experience designed for curious minds, thoughtful learning, and easy access to stories, ideas, and inspiration whenever you need them.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#showcase" class="btn btn-primary">Browse the shelves</a>
+              <a href="libary.html" class="btn btn-ghost">Return your book</a>
+            </div>
+
+            <div class="trust-row" aria-label="Library statistics">
+              <div class="trust-item">
+                <strong>24k+</strong>
+                Titles available
+              </div>
+              <div class="trust-item">
+                <strong>7 days</strong>
+                Open access
+              </div>
+              <div class="trust-item">
+                <strong>1.8k</strong>
+                Active members
+              </div>
+            </div>
+          </div>
+
+          <div class="visual-wrap" aria-label="Featured library scene">
+            <div class="hero-card">
+              <img
+                src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=900&q=80"
+                alt="Modern library interior with shelves and reading area"
+              />
+            </div>
+
+            <div class="floating-panel">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="color: var(--muted); font-size:0.82rem;">Books returned today</span>
+                <span style="color: var(--primary-2); font-weight:700;">+128</span>
+              </div>
+
+              <div class="mini-stat">
+                <div class="chip">📚</div>
+                <div>
+                  <strong>1,240</strong>
+                  <span>New borrows</span>
+                </div>
+              </div>
+
+              <div class="mini-stat">
+                <div class="chip">🧠</div>
+                <div>
+                  <strong>42</strong>
+                  <span>Events this month</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="features">
+        <div class="container">
+          <div class="section-head">
+            <h2>Everything your library needs.</h2>
+            <p>
+              Thoughtful collections, seamless borrowing, and welcoming spaces that help readers discover more, learn faster, and stay inspired.
+            </p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card">
+              <div class="feature-icon">📖</div>
+              <h3>Curated collections</h3>
+              <p>
+                Handpicked shelves across fiction, research, nonfiction, and kid-friendly reads to match every interest and age.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">🔎</div>
+              <h3>Easy borrowing</h3>
+              <p>
+                Quick checkout, digital renewals, and simple returns that make the library experience smooth and stress-free.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">🌱</div>
+              <h3>Community spaces</h3>
+              <p>
+                Calm study corners, creative workshops, and events that turn the library into a hub for learning and connection.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="showcase">
+        <div class="container showcase">
+          <div class="showcase-panel">
+            <img
+              src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80"
+              alt="Library shelves filled with books"
+            />
+          </div>
+
+          <div class="showcase-content">
+            <div class="eyebrow">Built for readers of every kind</div>
+            <h2 style="margin-top: 20px; font-size: clamp(2.2rem, 4vw, 3.5rem); letter-spacing: -0.05em;">
+              Reading should be easy,<br />inspiring, and joyful.
+            </h2>
+
+            <ul class="showcase-list">
+              <li>Find your next favorite title with smart recommendations and clear categories.</li>
+              <li>Reserve, renew, and return books quickly through a seamless library experience.</li>
+              <li>Explore workshops, author talks, and quiet study spaces that bring people together.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="stats-band" aria-label="Library performance stats">
+            <div class="stat-box">
+              <strong>18k</strong>
+              <span>Books in circulation</span>
+            </div>
+            <div class="stat-box">
+              <strong>92%</strong>
+              <span>Satisfaction rate</span>
+            </div>
+            <div class="stat-box">
+              <strong>24/7</strong>
+              <span>Online access</span>
+            </div>
+            <div class="stat-box">
+              <strong>68</strong>
+              <span>Weekly programs</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="testimonials">
+        <div class="container">
+          <div class="section-head">
+            <h2>Readers keep coming back.</h2>
+            <p>
+              Our community loves the calm, the discovery, and the effortless access to resources that make learning and reading feel inspiring every day.
+            </p>
+          </div>
+
+          <div class="testimonial-wrap">
+            <article class="quote-card">
+              <div class="stars">★★★★★</div>
+              <p>
+                “The library feels welcoming and modern, and the return process is unbelievably easy. I always find something new to love.”
+              </p>
+              <div class="person">
+                <img class="avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80" alt="Amanda Lee" />
+                <div>
+                  <strong>Amanda Lee</strong>
+                  <span>avid reader</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="quote-card">
+              <div class="stars">★★★★★</div>
+              <p>
+                “I love how easy it is to find books, renew them, and return them. The whole experience feels thoughtful and efficient.”
+              </p>
+              <div class="person">
+                <img class="avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" alt="Daniel Ortiz" />
+                <div>
+                  <strong>Daniel Ortiz</strong>
+                  <span>student</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="quote-card">
+              <div class="stars">★★★★★</div>
+              <p>
+                “The events and curated shelves make the library feel like a place for discovery, not just books. It’s a true community space.”
+              </p>
+              <div class="person">
+                <img class="avatar" src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=120&q=80" alt="Sophia Nguyen" />
+                <div>
+                  <strong>Sophia Nguyen</strong>
+                  <span>community member</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pricing">
+        <div class="container">
+          <div class="cta">
+            <div>
+              <h3>Ready to return your library book?</h3>
+              <p>Visit the library portal and keep your reading journey moving with ease.</p>
+            </div>
+            <a href="libary.html" class="btn btn-primary">Return now</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-row">
+        <div class="brand" aria-label="NovaNest footer brand">
+          <span class="brand-mark">N</span>
+          <span>NovaNest</span>
+        </div>
+
+        <div class="footer-links">
+          <a href="#features">Collections</a>
+          <a href="#showcase">Events</a>
+          <a href="#testimonials">Reviews</a>
+          <a href="libary.html">Return</a>
+        </div>
+
+        <span>© <span id="year"></span> NovaNest</span>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
