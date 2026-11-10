@@ -85,6 +85,8 @@
       form {
         display: grid;
         gap: 20px;
+        padding-left: 18px;
+        padding-right: 18px;
       }
 
       .field {
@@ -104,13 +106,14 @@
 
       select, input {
         width: 100%;
-        padding: 14px 16px;
+        padding: 14px 18px;
         border-radius: 12px;
         border: 1px solid var(--border);
         background: rgba(15, 23, 42, 0.8);
         color: var(--text);
         outline: none;
         transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        appearance: none;
       }
 
       select:focus, input:focus {
